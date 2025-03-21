@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin: 50px 0;
+            color: #a970ff;
+        }
+        
+        .search-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+        
+        .search-input {
+            padding: 12px 20px;
+            width: 300px;
+            border-radius: 25px;
+            border: none;
+            background-color: #e8eaed;
+            font-size: 16px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+        }
+        
+        .recommend-btn {
+            padding: 12px 25px;
+            border-radius: 25px;
+            border: none;
+            background-color: #a970ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        .recommend-btn:hover {
+            background-color: #9560e0;
+        }
+        
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #00e6c3;
+            text-align: center;
+        }
+        
+        .movie-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .movie-card {
+            width: 200px;
+            background-color: #111111;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        
+        .movie-title {
+            padding: 15px;
+            text-align: center;
+            color: #00e6c3;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .error-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .error-image {
+            width: 300px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .movie-container {
+                justify-content: center;
+            }
+            
+            .movie-card {
+                width: 150px;
+            }
+            
+            .movie-poster {
+                height: 225px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Recommendation System</h1>
+        
+        <form method="POST" class="search-container">
+            <input type="text" name="movie" class="search-input" placeholder="Enter a movie name" required value="{{ request.form.get('movie', '') }}">
+            <button type="submit" class="recommend-btn">Recommend</button>
+        </form>
+
+        {% if api_error %}
+        <div class="error-container">
+            <h2>TMDB API has gone for a walk, please try again</h2>
+            <img src="{{ url_for('static', filename='babrao.jpeg') }}" alt="API Error" class="error-image">
+        </div>
+        {% endif %}
+
+        {% if movie_not_found %}
+        <div class="error-container">
+            <img src="{{ url_for('static', filename='vegeta.gif') }}" alt="Movie Not Found" class="error-image">
+            <h2>The movie you searched was not found. Here's a gif of Vegeta exploding himself instead.</h2>
+        </div>
+        {% endif %}
+        
+        {% if recommendations %}
+        <div class="results-section">
+            <h2>Recommended Movies</h2>
+            <div class="movie-container">
+                {% for movie, poster in recommendations %}
+                <div class="movie-card">
+                    <img src="{{ poster }}" alt="{{ movie }}" class="movie-poster">
+                    <div class="movie-title">{{ movie }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
