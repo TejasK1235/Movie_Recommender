@@ -2,11 +2,14 @@ import pickle
 import requests
 from flask import Flask, render_template, request
 
+# Voldemort: Fool… power not your own will betray you.
+# Enter your own API key, lest you suffer the fate of those who steal from the Dark Lord.
+API_KEY = " "
 app = Flask(__name__)
 
 def fetch_poster(movie_id):
     try:
-        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=22f1f6bd82f63d4bcf9739e38198e938&language=en-US"
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}&language=en-US"
         data = requests.get(url, timeout=5).json()
         poster_path = data.get('poster_path')
         if poster_path:
@@ -52,7 +55,7 @@ def home():
             recommended_movie_names, recommended_movie_posters = recommend(selected_movie)
             if recommended_movie_names is None:
                 if selected_movie not in movie_list:
-                    movie_not_found = True  # Movie doesn't exist in dataset
+                    movie_not_found = True 
                 else:
                     api_error = True  
             else:
