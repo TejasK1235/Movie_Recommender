@@ -3,7 +3,6 @@ nltk
 pandas
 numpy
 scikit-learn
-pickle
 requests
 seaborn
 matplotlib
